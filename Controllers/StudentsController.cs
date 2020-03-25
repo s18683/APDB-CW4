@@ -15,15 +15,13 @@ namespace Ex3V2.Controllers
             var list = new List<Student>();
             //Nie umielem sie odwolac do bazy szkolnej, caly czas dostawalem blad nie udalo sie zaglogowac/haslo jest zle
             using (var con = new SqlConnection("Server = localhost, 33333; Initial Catalog = s18683; User ID = admin; Password = admin"))
-            using (var com = new SqlCommand())
-            {
+            using (var com = new SqlCommand()){
                 com.Connection = con;
                 com.CommandText = "SELECT * FROM student,enrollment,studies " + "WHERE student.idenrollment=enrollment.idenrollment AND studies.idstudy=enrollment.idstudy";
 
                 con.Open();
                 var dr = com.ExecuteReader();
-                while (dr.Read())
-                {
+                while (dr.Read()){
 
                     var st = new Student();
                     st.FirstName = dr["FirstName"].ToString();
@@ -38,12 +36,11 @@ namespace Ex3V2.Controllers
         }
 
         [HttpGet("{indexNumber}")]
-        public IActionResult GetStudent(string indexNumber)
-        {
+        public IActionResult GetStudent(string indexNumber){
+
             //Nie umielem sie odwolac do bazy szkolnej, caly czas dostawalem blad nie udalo sie zaglogowac/haslo jest zle
             using (SqlConnection con = new SqlConnection("Server = localhost, 33333; Initial Catalog = s18683; User ID = admin; Password = admin"))
-            using (SqlCommand com = new SqlCommand())
-            {
+            using (SqlCommand com = new SqlCommand()){
 
                 com.Connection = con;
                 com.CommandText = "select * from student, enrollment where indexnumber=@index AND " + "enrollment.idenrollment = student.idenrollment";
@@ -51,8 +48,7 @@ namespace Ex3V2.Controllers
 
                 con.Open();
                 var dr = com.ExecuteReader();
-                if (dr.Read())
-                {
+                if (dr.Read()){
 
                     var st = new Student();
                     st.FirstName = dr["FirstName"].ToString();
@@ -63,6 +59,5 @@ namespace Ex3V2.Controllers
             }
             return NotFound();
         }
-
     }
 }
