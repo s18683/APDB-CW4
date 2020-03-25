@@ -13,7 +13,7 @@ namespace Ex3V2.Controllers
         public IActionResult GetStudent(){
 
             var list = new List<Student>();
-            //Nie umialem siê odwo³aæ do bazy danej szkolnej, ca³y czas dostawa³em b³¹d ¿e nie uda³o siê zalogowaæ/has³o jest z³e
+            //Nie umielem sie odwolac do bazy szkolnej, caly czas dostawalem blad nie udalo sie zaglogowac/haslo jest zle
             using (var con = new SqlConnection("Server = localhost, 33333; Initial Catalog = s18683; User ID = admin; Password = admin"))
             using (var com = new SqlCommand())
             {
@@ -40,7 +40,7 @@ namespace Ex3V2.Controllers
         [HttpGet("{indexNumber}")]
         public IActionResult GetStudent(string indexNumber)
         {
-            //Nie umialem siê odwo³aæ do bazy danej szkolnej, ca³y czas dostawa³em b³¹d ¿e nie uda³o siê zalogowaæ/has³o jest z³e
+            //Nie umielem sie odwolac do bazy szkolnej, caly czas dostawalem blad nie udalo sie zaglogowac/haslo jest zle
             using (SqlConnection con = new SqlConnection("Server = localhost, 33333; Initial Catalog = s18683; User ID = admin; Password = admin"))
             using (SqlCommand com = new SqlCommand())
             {
