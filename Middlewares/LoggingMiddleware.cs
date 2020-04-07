@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExV2.Services;
 
-namespace WebApplication2.Middlewares
+namespace ExV2.Middlewares
 {
     public class LoggingMiddleware
     {
@@ -38,7 +38,13 @@ namespace WebApplication2.Middlewares
                     bodyS = await reader.ReadToEndAsync();
                 }
 
-             
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "requestsLog.txt"),true))
+                {
+                    outputFile.WriteLine("Metoda: " + method + "\nSciezka: " + path + "\nBody: " + bodyS + "\nQueryString: " + queryString);
+                    
+                }
+               
+
             }
 
             await _next(httpContext);
