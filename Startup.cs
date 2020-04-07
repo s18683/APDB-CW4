@@ -15,8 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Ex3V2.Middlewares;
 using Ex3V2.Models;
-using static System.Net.WebRequestMethods;
 using Ex3V2.Services;
+using static System.Net.WebRequestMethods;
 
 namespace Ex3V2
 {
@@ -32,65 +32,86 @@ namespace Ex3V2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IDbService, DbService>();
-            services.AddControllers();
-
-               services.AddSwaggerGen(conf =>
+            services.AddScoped<IDbService, SqlServerDbService>();
+            services.AddControllers(config =>
             {
-                conf.SwaggerDoc("v1",   new OpenApiInfo {Title = "API", Version = "v1"});
+                config.Filters.Add(typeof(CustomExceptionFilter));
+            });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
         }
-        }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app,
-                          IWebHostEnvironment env,
-                          IDbService dbService)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbService dbService)
         {
-
-            
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-             app.UseSwagger();
-            app.UseSwaggerUI(conf =>
+            app.Enabl
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
             {
-                conf.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            app.UseMiddleware<LoggingMiddleware>();
+            //Globalna obs³uga b³êdów
+            //app.UseExceptionHandler(options =>
+            //{
+            //    options.Run(
+            //    async context =>
+            //    {
+            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            //        context.Response.ContentType = "application/json";
 
+            //        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+            //        if (contextFeature != null)
+            //        {
+            //            await context.Response.WriteAsync(new ErrorDetails()
+            //            {
+            //                StatusCode = context.Response.StatusCode,
+            //                Message = "Internal Server Error."
+            //            }.ToString());
+            //        }
+            //    });
+            //});
+
+            //app.UseMiddleware<LoggingMiddleware>();
             app.Use(async (context, next) =>
             {
                 if (!context.Request.Headers.ContainsKey("Index"))
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Nie podano indeksu w nagłówku");
+                    await context.Response.WriteAsync("Nie poda³eœ indeksu");
                     return;
                 }
-            
+
                 string index = context.Request.Headers["Index"].ToString();
-                
-                if (!dbService.CIndex(index))
-                {
-                    //Wydaje mi sie że 404 lepiej tu pasuje niz 401 (mogę być w błędzie)
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    await context.Response.WriteAsync("Student o podanym indeksie nie istnieje");
-                    return;
-                }
-                
+                //check in db
+
+
                 await next();
             });
+            
 
-            app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseRouting();  // /api/students/10/grades GET   -->  StudentsController i GetStudents
 
-            app.UseAuthorization();
+            //......
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => // Wykonuje zadania GetStudents()
+            {
+                endpoints.MapControllers();
+            });
         }
+    }
 }
