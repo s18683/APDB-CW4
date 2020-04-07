@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ExV2.Services;
+using Ex3V2.Services;
 
-namespace ExV2.Middlewares
+namespace Ex3V2.Middlewares
 {
     public class LoggingMiddleware
     {
@@ -38,9 +38,9 @@ namespace ExV2.Middlewares
                     bodyS = await reader.ReadToEndAsync();
                 }
 
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "requestsLog.txt"),true))
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine("requestsLog.txt"),true))
                 {
-                    outputFile.WriteLine("Metoda: " + method + "\nSciezka: " + path + "\nBody: " + bodyS + "\nQueryString: " + queryString);
+                    outputFile.WriteLine("Method: " + method + "\nPath: " + path + "\nBody: " + bodyS + "\nQueryString: " + queryString);
                     
                 }
                

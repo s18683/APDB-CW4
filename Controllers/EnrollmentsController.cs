@@ -13,14 +13,9 @@ namespace Ex3V2.Controllers
     [Route("api/enrollments")]
     public class EnrollmentsController : ControllerBase
     {
-        private IStudentsDbService _service;
+      
 
-        public EnrollmentsController(IStudentsDbService service)
-        {
-            _service = service;
-        }
-
-        //
+     /*
 
         [HttpPost]
         public IActionResult EnrollStudent(Student stud)
@@ -37,7 +32,7 @@ namespace Ex3V2.Controllers
 
         }
 
-
+        /*
         [HttpPost("promotions")]
         public IActionResult PromoteStudents(Enrollment en)
         {
@@ -74,6 +69,6 @@ namespace Ex3V2.Controllers
             return Ok("OK");
         }
         */
-        }
+        
     }
 }
