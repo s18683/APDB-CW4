@@ -74,7 +74,7 @@ namespace Ex3V2
             
                 string index = context.Request.Headers["Index"].ToString();
                 
-                if (!dbService.CheckIndexNumber(index))
+                if (!dbService.CIndex(index))
                 {
                     //Wydaje mi sie że 404 lepiej tu pasuje niz 401 (mogę być w błędzie)
                     context.Response.StatusCode = StatusCodes.Status404NotFound;
