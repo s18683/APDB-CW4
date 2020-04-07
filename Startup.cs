@@ -32,16 +32,12 @@ namespace Ex3V2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDbService, SqlServerDbService>();
-            services.AddControllers(config =>
-            {
-                config.Filters.Add(typeof(CustomExceptionFilter));
-            });
+            services.AddTransient<IDbService, DbService>();
+            services.AddControllers();
 
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(config =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                config.SwaggerDoc("v1", new OpenApiInfo { Title = "Student App API", Version = "v1" });
             });
         }
 
@@ -53,50 +49,32 @@ namespace Ex3V2
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Enabl
+           // app.Enabl
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
+       
             app.UseSwagger();
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            //Globalna obs³uga b³êdów
-            //app.UseExceptionHandler(options =>
-            //{
-            //    options.Run(
-            //    async context =>
-            //    {
-            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            //        context.Response.ContentType = "application/json";
-
-            //        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-            //        if (contextFeature != null)
-            //        {
-            //            await context.Response.WriteAsync(new ErrorDetails()
-            //            {
-            //                StatusCode = context.Response.StatusCode,
-            //                Message = "Internal Server Error."
-            //            }.ToString());
-            //        }
-            //    });
-            //});
-
-            //app.UseMiddleware<LoggingMiddleware>();
             app.Use(async (context, next) =>
             {
                 if (!context.Request.Headers.ContainsKey("Index"))
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Nie poda³eœ indeksu");
+                    await context.Response.WriteAsync("Nie posiada indeksu");
                     return;
                 }
 
                 string index = context.Request.Headers["Index"].ToString();
-                //check in db
+                if (!dbService.CIndex(index))
+                {
+                    //Wydaje mi sie że 404 lepiej tu pasuje niz 401 (mogę być w błędzie)
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await context.Response.WriteAsync("Student o podanym indeksie nie istnieje");
+                    return;
+                }
 
 
                 await next();
@@ -104,9 +82,7 @@ namespace Ex3V2
             
 
 
-            app.UseRouting();  // /api/students/10/grades GET   -->  StudentsController i GetStudents
-
-            //......
+            app.UseRouting(); 
 
             app.UseEndpoints(endpoints => // Wykonuje zadania GetStudents()
             {
