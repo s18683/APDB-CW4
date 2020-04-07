@@ -25,21 +25,20 @@ namespace WebApplication2.Middlewares
 
             if (httpContext.Request != null)
             {
-                string metoda = httpContext.Request.Method.ToString();
-                string sciezka = httpContext.Request.Path; //"api/students"
-                string bodyStr = "";
-                string querystring = httpContext.Request?.QueryString.ToString();
+                string bodyS = "";
+                string method = httpContext.Request.Method.ToString();
+                string queryString = httpContext.Request?.QueryString.ToString();
+                string path = httpContext.Request.Path; //"api/students"
+                
+                
 
                 using (StreamReader reader
                  = new StreamReader(httpContext.Request.Body, Encoding.UTF8, true, 1024, true))
                 {
-                    bodyStr = await reader.ReadToEndAsync();
+                    bodyS = await reader.ReadToEndAsync();
                 }
 
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine("requestsLog.txt"), true))
-                {
-                    outputFile.WriteLine($"{metoda}  | {sciezka} \nbody | {bodyStr} \nquery| {querystring}\n");
-                }
+             
             }
 
             await _next(httpContext);
