@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using Ex3V2.Middlewares;
 using Ex3V2.Models;
 using static System.Net.WebRequestMethods;
+using Ex3V2.Services;
 
 namespace Ex3V2
 {
@@ -41,8 +42,10 @@ namespace Ex3V2
         }
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbService dbService)
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app,
+                          IWebHostEnvironment env,
+                          IDbService dbService)
         {
 
             
@@ -65,7 +68,7 @@ namespace Ex3V2
                 if (!context.Request.Headers.ContainsKey("Index"))
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Nie podano indeksu w nag³ówku");
+                    await context.Response.WriteAsync("Nie podano indeksu w nagÅ‚Ã³wku");
                     return;
                 }
             
@@ -73,7 +76,7 @@ namespace Ex3V2
                 
                 if (!dbService.CheckIndexNumber(index))
                 {
-                    //Wydaje mi sie ¿e 404 lepiej tu pasuje niz 401 (mogê byæ w b³êdzie)
+                    //Wydaje mi sie Å¼e 404 lepiej tu pasuje niz 401 (mogÄ™ byÄ‡ w bÅ‚Ä™dzie)
                     context.Response.StatusCode = StatusCodes.Status404NotFound;
                     await context.Response.WriteAsync("Student o podanym indeksie nie istnieje");
                     return;
@@ -90,5 +93,4 @@ namespace Ex3V2
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-    }
 }
