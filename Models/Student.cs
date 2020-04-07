@@ -7,5 +7,6 @@ namespace Ex3V2.Models
         public string BirthDate { get; set; }
         public string StudiesName { get; set; }
         public string Semester { get; set; }
+        public int IdStudent { get; set; }
     }
 }
