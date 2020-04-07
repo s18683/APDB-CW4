@@ -10,7 +10,7 @@ namespace Ex3V2.Services
     public class DbService : IDbService
     {
 
-        public string CIndex(string index)
+        public bool CIndex(string index)
         {
             using (var client = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18683;Integrated Security=True"))
               using (var com = new SqlCommand())
@@ -25,6 +25,7 @@ namespace Ex3V2.Services
                 var dr = com.ExecuteReader();
 
                 if (!dr.Read()){
+
                     return false;
                 }
               }
