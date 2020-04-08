@@ -29,8 +29,8 @@ namespace Ex3V2.Middlewares
                 string bodyS = "";
                 string method = httpContext.Request.Method.ToString();
                 string queryString = httpContext.Request?.QueryString.ToString();
-                string path = httpContext.Request.Path; //"api/students"
-                
+                string path = httpContext.Request.Path;
+                //
                 
 
                 using (StreamReader reader
@@ -52,3 +52,4 @@ namespace Ex3V2.Middlewares
         }
     }
 }
+//test
